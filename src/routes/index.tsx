@@ -4,7 +4,7 @@ import { Play, Plus, Square, Trash2, Volume2 } from 'lucide-react'
 import { hush, initStrudel, s, samples } from '@strudel/web'
 import logo from '../logo.svg'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
 
 export const Route = createFileRoute('/')({
@@ -129,180 +129,178 @@ function App() {
   // No volume update effect needed - volume is applied when pattern is created
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex flex-col items-center justify-center p-4">
-      <div className="text-center space-y-8">
-        {/* Logo */}
-        <img
-          src={logo}
-          className="h-32 mx-auto pointer-events-none animate-[spin_20s_linear_infinite]"
-          alt="The Beat Bakery Logo"
-        />
-        
-        <h1 className="text-4xl font-bold text-white mb-2">The Beat Bakery</h1>
-        <p className="text-xl text-gray-300 mb-8">Cook up some beats with Strudel patterns</p>
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <img
+            src={logo}
+            className="h-16 pointer-events-none animate-[spin_20s_linear_infinite]"
+            alt="The Beat Bakery Logo"
+          />
+          <div>
+            <h1 className="text-3xl font-bold text-white">The Beat Bakery</h1>
+            <p className="text-lg text-gray-300">Cook up some beats with Strudel patterns</p>
+          </div>
+        </div>
+      </div>
 
-        {/* Global Controls */}
-        <Card className="w-full max-w-md mx-auto bg-black/20 backdrop-blur-sm border-white/10">
-          <CardHeader>
-            <CardTitle className="text-white">Global Controls</CardTitle>
-            <CardDescription className="text-gray-300">
-              Master volume and stop all patterns
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Global Controls */}
-            <div className="flex gap-4 justify-center">
-              <Button
-                onClick={playAll}
-                disabled={isPlaying || patterns.filter(p => p.pattern.trim()).length === 0}
-                size="lg"
-                className="bg-green-600 hover:bg-green-700 text-white flex-1"
-              >
-                <Play className="mr-2 h-4 w-4" />
-                Play All
-              </Button>
-              <Button
-                onClick={stopAll}
-                disabled={!isPlaying}
-                size="lg"
-                variant="destructive"
-                className="flex-1"
-              >
-                <Square className="mr-2 h-4 w-4" />
-                Stop All
-              </Button>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Controls */}
+        <div className="lg:col-span-1 space-y-4">
+          {/* Global Controls */}
+          <Card className="bg-black/20 backdrop-blur-sm border-white/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-white text-lg">Global Controls</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Global Controls */}
+              <div className="flex gap-2">
+                <Button
+                  onClick={playAll}
+                  disabled={isPlaying || patterns.filter(p => p.pattern.trim()).length === 0}
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700 text-white flex-1"
+                >
+                  <Play className="mr-1 h-3 w-3" />
+                  Play All
+                </Button>
+                <Button
+                  onClick={stopAll}
+                  disabled={!isPlaying}
+                  size="sm"
+                  variant="destructive"
+                  className="flex-1"
+                >
+                  <Square className="mr-1 h-3 w-3" />
+                  Stop All
+                </Button>
+              </div>
+              
               <Button
                 onClick={addPattern}
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white w-full"
               >
-                <Plus className="mr-2 h-4 w-4" />
-                Add
+                <Plus className="mr-1 h-3 w-3" />
+                Add Pattern
               </Button>
-            </div>
 
-            {/* Master Volume Control */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-white">
-                <Volume2 className="h-4 w-4" />
-                <span className="text-sm">Master Volume: {Math.round(volume[0] * 100)}%</span>
+              {/* Master Volume Control */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-white">
+                  <Volume2 className="h-3 w-3" />
+                  <span className="text-xs">Volume: {Math.round(volume[0] * 100)}%</span>
+                </div>
+                <Slider
+                  value={volume}
+                  onValueChange={setVolume}
+                  max={1}
+                  min={0}
+                  step={0.01}
+                  className="w-full"
+                />
               </div>
-              <Slider
-                value={volume}
-                onValueChange={setVolume}
-                max={1}
-                min={0}
-                step={0.01}
-                className="w-full"
-              />
-            </div>
 
-            {/* Status */}
-            <div className="text-center">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                isPlaying
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-gray-100 text-gray-800'
-              }`}>
-                {isPlaying ? '🎵 Playing All' : '⏸️ All Stopped'}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+              {/* Status */}
+              <div className="text-center">
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                  isPlaying
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {isPlaying ? '🎵 Playing' : '⏸️ Stopped'}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Pattern Cards */}
-        <div className="w-full max-w-6xl mx-auto space-y-4">
+          {/* Sample Patterns Help */}
+          <Card className="bg-black/20 backdrop-blur-sm border-white/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-white text-lg">Sample Patterns</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3 text-xs">
+                <div className="space-y-1">
+                  <h4 className="font-semibold text-white text-sm">Basic Drums:</h4>
+                  <div className="font-mono text-gray-300 space-y-1">
+                    <div><code className="bg-black/30 px-1 py-0.5 rounded text-xs">bd sd [~ bd] sd</code></div>
+                    <div><code className="bg-black/30 px-1 py-0.5 rounded text-xs">hh*8</code></div>
+                    <div><code className="bg-black/30 px-1 py-0.5 rounded text-xs">oh ~ ~ hh</code></div>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="font-semibold text-white text-sm">Advanced:</h4>
+                  <div className="font-mono text-gray-300 space-y-1">
+                    <div><code className="bg-black/30 px-1 py-0.5 rounded text-xs">bd sd, hh*4</code></div>
+                    <div><code className="bg-black/30 px-1 py-0.5 rounded text-xs">bd(&lt;3 5&gt;,8)</code></div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Info Links */}
+          <div className="flex flex-col gap-2 text-xs">
+            <a
+              className="text-blue-300 hover:text-blue-200 hover:underline text-center"
+              href="https://strudel.cc/learn/samples/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn Strudel Patterns
+            </a>
+            <a
+              className="text-blue-300 hover:text-blue-200 hover:underline text-center"
+              href="https://strudel.cc/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Strudel REPL
+            </a>
+          </div>
+        </div>
+
+        {/* Right Column - Pattern Cards */}
+        <div className="lg:col-span-2 space-y-3">
           {patterns.map((pattern) => (
             <Card key={pattern.id} className="bg-black/20 backdrop-blur-sm border-white/10">
-              <CardHeader>
+              <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={pattern.name}
-                      onChange={(e) => updatePattern(pattern.id, 'name', e.target.value)}
-                      className="text-lg font-semibold bg-transparent text-white border-none outline-none hover:bg-white/10 px-2 py-1 rounded"
-                      placeholder="Pattern Name"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={pattern.name}
+                    onChange={(e) => updatePattern(pattern.id, 'name', e.target.value)}
+                    className="text-lg font-semibold bg-transparent text-white border-none outline-none hover:bg-white/10 px-2 py-1 rounded flex-1"
+                    placeholder="Pattern Name"
+                  />
                   <Button
                     onClick={() => removePattern(pattern.id)}
                     size="sm"
                     variant="destructive"
-                    className="h-8 w-8 p-0"
+                    className="h-7 w-7 p-0 ml-2"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="pt-0">
                 {/* Pattern Input */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-gray-300">
                     Strudel Pattern:
                   </label>
                   <textarea
                     value={pattern.pattern}
                     onChange={(e) => updatePattern(pattern.id, 'pattern', e.target.value)}
-                    className="w-full h-20 px-3 py-2 bg-black/30 border border-white/20 rounded-md text-white placeholder-gray-400 font-mono text-sm resize-none"
-                    placeholder='Enter Strudel pattern... e.g. "bd sd [~ bd] sd" or "hh*8"'
+                    className="w-full h-12 px-2 py-1 bg-black/30 border border-white/20 rounded-md text-white placeholder-gray-400 font-mono text-sm resize-none"
+                    placeholder='e.g. "bd sd [~ bd] sd" or "hh*8"'
                   />
                 </div>
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        {/* Sample Patterns Help */}
-        <Card className="w-full max-w-4xl mx-auto bg-black/20 backdrop-blur-sm border-white/10">
-          <CardHeader>
-            <CardTitle className="text-white">Sample Patterns</CardTitle>
-            <CardDescription className="text-gray-300">
-              Try these example patterns to get started
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div className="space-y-2">
-                <h4 className="font-semibold text-white">Drum Patterns:</h4>
-                <div className="font-mono text-gray-300 space-y-1">
-                  <div><code className="bg-black/30 px-2 py-1 rounded">bd sd [~ bd] sd</code> - Basic kick & snare</div>
-                  <div><code className="bg-black/30 px-2 py-1 rounded">hh*8</code> - Fast hi-hats</div>
-                  <div><code className="bg-black/30 px-2 py-1 rounded">oh ~ ~ hh</code> - Open/closed hats</div>
-                  <div><code className="bg-black/30 px-2 py-1 rounded">bd*2 sd</code> - Double kick</div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold text-white">Advanced:</h4>
-                <div className="font-mono text-gray-300 space-y-1">
-                  <div><code className="bg-black/30 px-2 py-1 rounded">bd sd, hh*4</code> - Polyrhythm</div>
-                  <div><code className="bg-black/30 px-2 py-1 rounded">bd(&lt;3 5&gt;,8)</code> - Euclidean</div>
-                  <div><code className="bg-black/30 px-2 py-1 rounded">s("bd sd").speed("1 2")</code> - Speed change</div>
-                  <div><code className="bg-black/30 px-2 py-1 rounded">"bd sd".bank("RolandTR808")</code> - Sound bank</div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Info Links */}
-        <div className="flex gap-6 justify-center text-sm">
-          <a
-            className="text-blue-300 hover:text-blue-200 hover:underline"
-            href="https://strudel.cc/learn/samples/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Strudel Patterns
-          </a>
-          <a
-            className="text-blue-300 hover:text-blue-200 hover:underline"
-            href="https://strudel.cc/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Strudel REPL
-          </a>
         </div>
       </div>
     </div>
